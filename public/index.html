@@ -4,481 +4,333 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>UD CoinDCX 1M Box Breakout</title>
-
+<title>UD CoinDCX 1M Box Breakout Scanner</title>
 <style>
-* {
-  box-sizing: border-box;
+:root {
+  --bg:#0b1020; --panel:#141c30; --border:#26334d;
+  --text:#e8eefc; --muted:#91a0bd; --green:#20c997;
+  --red:#ff5c70; --blue:#5b9cff; --yellow:#ffc857;
 }
-
-body {
-  margin: 0;
-  background: #080e1e;
-  color: #e8eefc;
-  font-family: Arial, sans-serif;
-}
-
-header {
-  padding: 22px 18px;
-  background: #111a30;
-  border-bottom: 1px solid #293650;
-}
-
-h1 {
-  font-size: 23px;
-  margin: 0 0 10px;
-}
-
-.subtitle {
-  color: #9baac5;
-  font-size: 13px;
-}
-
-.container {
-  padding: 16px;
-  max-width: 1400px;
-  margin: auto;
-}
-
-.cards {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-  margin-bottom: 20px;
-}
-
-.card {
-  background: #131e34;
-  border: 1px solid #293650;
-  border-radius: 12px;
-  padding: 17px;
-}
-
-.card span {
-  color: #98a9c5;
-  font-size: 12px;
-}
-
-.card h2 {
-  font-size: 24px;
-  margin: 10px 0 0;
-}
-
-.green {
-  color: #21d6a0;
-}
-
-.red {
-  color: #ff637e;
-}
-
-button {
-  background: #2563eb;
-  color: white;
-  border: 0;
-  border-radius: 8px;
-  padding: 12px 18px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-button:disabled {
-  opacity: .5;
-}
-
-input {
-  background: #0c1528;
-  border: 1px solid #354461;
-  color: white;
-  border-radius: 7px;
-  padding: 11px;
-  width: 100%;
-  margin-top: 8px;
-}
-
-.controls {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin: 18px 0;
-}
-
-.section {
-  background: #111a30;
-  border: 1px solid #293650;
-  border-radius: 12px;
-  padding: 16px;
-  margin: 18px 0;
-}
-
-.section h3 {
-  margin-top: 0;
-  font-size: 18px;
-}
-
-.table-wrap {
-  overflow-x: auto;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 780px;
-  font-size: 13px;
-}
-
-th, td {
-  text-align: left;
-  padding: 14px 11px;
-  border-bottom: 1px solid #293650;
-  white-space: nowrap;
-}
-
-th {
-  color: #9baac5;
-  background: #17243b;
-}
-
-.status {
-  margin-top: 15px;
-  color: #a6b5ce;
-  font-size: 13px;
-}
-
-.badge {
-  font-weight: bold;
-}
-
-.buy {
-  color: #21d6a0;
-}
-
-.sell {
-  color: #ff637e;
-}
-
-.muted {
-  color: #9baac5;
-}
-
-@media(min-width:700px) {
-  .cards {
-    grid-template-columns: repeat(4, 1fr);
-  }
-
-  .controls {
-    grid-template-columns: 220px 220px auto;
-    align-items: end;
-  }
-}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);
+font-family:Arial,sans-serif;padding:18px}
+header{display:flex;justify-content:space-between;align-items:center;
+flex-wrap:wrap;gap:12px;margin-bottom:18px}
+h1{font-size:21px;margin:0}
+.muted{color:var(--muted);font-size:12px}
+button{background:var(--blue);color:white;border:0;padding:10px 15px;
+border-radius:7px;font-weight:bold;cursor:pointer}
+button:disabled{opacity:.5}
+input{background:#0b1020;color:white;border:1px solid var(--border);
+padding:9px;border-radius:6px;width:100%}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+gap:12px;margin-bottom:16px}
+.panel{background:var(--panel);border:1px solid var(--border);
+border-radius:10px;padding:14px;margin-bottom:14px;min-width:0}
+.stat{font-size:24px;font-weight:bold;margin-top:8px}
+h2{font-size:15px;margin:0 0 12px}
+table{width:100%;border-collapse:collapse;font-size:12px;min-width:650px}
+th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--border)}
+th{color:var(--muted);font-weight:normal}
+.table-wrap{overflow-x:auto}
+.buy{color:var(--green);font-weight:bold}
+.sell{color:var(--red);font-weight:bold}
+.status{color:var(--yellow)}
+.settings{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
+gap:12px;align-items:end}
+.settings label{font-size:12px;color:var(--muted);display:block;margin-bottom:6px}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.error{color:var(--red);font-size:12px}
+.good{color:var(--green)}
 </style>
 </head>
-
 <body>
 
 <header>
-  <h1>UD · CoinDCX 1M Box Breakout</h1>
-  <div class="subtitle">
-    5 Candle Box · Next 5 Candle Breakout · 1.5R Target
+  <div>
+    <h1>UD CoinDCX 1M Box Breakout Scanner</h1>
+    <div class="muted">5-candle box · 5-candle breakout window · 1.5R target</div>
   </div>
-  <div class="status" id="connection">
-    Connecting to CoinDCX scanner...
+  <div class="actions">
+    <button id="scanBtn" onclick="runScan()">SCAN NOW</button>
+    <button onclick="refreshDashboard()">REFRESH</button>
   </div>
 </header>
 
-<div class="container">
-
-  <div class="cards">
-
-    <div class="card">
-      <span>Total USDT Pairs</span>
-      <h2 id="totalPairs">0</h2>
-    </div>
-
-    <div class="card">
-      <span>Pairs Scanned</span>
-      <h2 id="scanned">0</h2>
-    </div>
-
-    <div class="card">
-      <span>BUY Signals</span>
-      <h2 class="green" id="buyCount">0</h2>
-    </div>
-
-    <div class="card">
-      <span>SELL Signals</span>
-      <h2 class="red" id="sellCount">0</h2>
-    </div>
-
+<div class="grid">
+  <div class="panel">
+    <div class="muted">Total Markets</div>
+    <div class="stat" id="markets">--</div>
   </div>
-
-  <div class="section">
-
-    <h3>Scanner Settings</h3>
-
-    <div class="controls">
-
-      <div>
-        <label>Account Balance (USDT)</label>
-        <input id="balance" type="number"
-          value="10000" min="1">
-      </div>
-
-      <div>
-        <label>Risk Per Trade (%)</label>
-        <input id="risk" type="number"
-          value="1" min="0.1" max="1" step="0.1">
-      </div>
-
-      <div>
-        <button id="scanBtn" onclick="scanMarkets()">
-          START SCANNING
-        </button>
-      </div>
-
-    </div>
-
-    <div class="muted">
-      Timeframe: 1 Minute |
-      Box: 5 Candles |
-      Breakout: Next 5 Candles |
-      Target: 1.5R
-    </div>
-
+  <div class="panel">
+    <div class="muted">New Signals</div>
+    <div class="stat" id="signals">--</div>
   </div>
-
-  <div class="section">
-
-    <h3>BUY / SELL Signals</h3>
-
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Pair</th>
-            <th>Side</th>
-            <th>Entry</th>
-            <th>Stop Loss</th>
-            <th>Target</th>
-            <th>Quantity</th>
-            <th>Risk USDT</th>
-            <th>Time</th>
-          </tr>
-        </thead>
-
-        <tbody id="signals">
-          <tr>
-            <td colspan="8" class="muted">
-              Waiting for scanner...
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
+  <div class="panel">
+    <div class="muted">Active Positions</div>
+    <div class="stat" id="activeCount">--</div>
   </div>
-
-  <div class="section">
-
-    <h3>Open Virtual Positions</h3>
-
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Pair</th>
-            <th>Side</th>
-            <th>Entry</th>
-            <th>Stop Loss</th>
-            <th>Target</th>
-            <th>Live P&L</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-
-        <tbody id="positions">
-          <tr>
-            <td colspan="7" class="muted">
-              No virtual positions yet.
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
+  <div class="panel">
+    <div class="muted">Closed Trades</div>
+    <div class="stat" id="closedCount">--</div>
   </div>
+  <div class="panel">
+    <div class="muted">Realized P&L</div>
+    <div class="stat" id="realizedPnl">--</div>
+  </div>
+</div>
 
-  <div class="section">
-    <h3>Scanner Activity</h3>
-    <div class="status" id="activity">
-      Scanner not started.
+<div class="panel">
+  <h2>Scanner Settings</h2>
+  <div class="settings">
+    <div>
+      <label>Account Balance (USDT)</label>
+      <input id="balance" type="number" min="1" value="10000">
+    </div>
+    <div>
+      <label>Risk Per Trade (%)</label>
+      <input id="risk" type="number" min="0.1" max="1" step="0.1" value="1">
+    </div>
+    <div>
+      <button onclick="saveSettings()">SAVE SETTINGS</button>
     </div>
   </div>
+  <div class="muted" id="settingsMsg" style="margin-top:9px"></div>
+</div>
 
+<div class="panel">
+  <h2>Latest Scan Signals</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th>Pair</th><th>Direction</th><th>Entry</th>
+        <th>Stop Loss</th><th>Target</th><th>Quantity</th><th>Time</th>
+      </tr></thead>
+      <tbody id="signalRows">
+        <tr><td colspan="7" class="muted">No scan data yet</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="panel">
+  <h2>Active Virtual Positions</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th>Pair</th><th>Side</th><th>Entry</th><th>Stop Loss</th>
+        <th>Target</th><th>Quantity</th><th>Unrealized P&L</th><th>Status</th>
+      </tr></thead>
+      <tbody id="positionRows">
+        <tr><td colspan="8" class="muted">No active positions</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="panel">
+  <h2>Closed Trade History</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th>Pair</th><th>Side</th><th>Entry</th><th>Exit</th>
+        <th>Result</th><th>P&L</th><th>Closed At</th>
+      </tr></thead>
+      <tbody id="closedRows">
+        <tr><td colspan="7" class="muted">No closed trades</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="panel">
+  <h2>Scanner Status</h2>
+  <div id="status" class="muted">Connecting to server...</div>
+  <div id="error" class="error"></div>
+  <div class="muted" style="margin-top:8px">
+    Auto refresh: every 30 seconds. Use SCAN NOW to request a new full scan.
+  </div>
 </div>
 
 <script>
-
+const API = "";
 let scanning = false;
 
-let signalHistory = [];
-let virtualPositions = [];
-
-async function api(url) {
-  const response = await fetch(url);
-
-  if (!response.ok) {
-    throw new Error("API error: " + response.status);
-  }
-
-  return response.json();
+function fmt(value, digits=8) {
+  const n = Number(value);
+  return Number.isFinite(n) ? n.toFixed(digits).replace(/\.?0+$/,"") : "--";
 }
-
-function price(value) {
-  return Number(value).toLocaleString(
-    "en-US",
-    {
-      maximumFractionDigits: 10
-    }
-  );
+function money(value) {
+  const n = Number(value);
+  return Number.isFinite(n) ? n.toFixed(4) : "--";
 }
-
-function addSignal(signal) {
-
-  const exists = signalHistory.some(
-    s => s.pair === signal.pair &&
-         s.breakoutTime === signal.breakoutTime &&
-         s.side === signal.side
-  );
-
-  if (exists) return;
-
-  signalHistory.unshift(signal);
-
-  virtualPositions.push({
-    ...signal,
-    livePrice: signal.entry,
-    pnl: 0,
-    status: "OPEN"
+function safe(value) {
+  return String(value ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[c]));
+}
+function sideClass(side) {
+  return String(side).toUpperCase() === "BUY" ? "buy" : "sell";
+}
+async function getJSON(path, options={}) {
+  const response = await fetch(API + path, {
+    headers: {"Content-Type":"application/json"},
+    ...options
   });
-
-  renderSignals();
-  renderPositions();
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.error || `HTTP ${response.status}`);
+  return data;
 }
 
-function renderSignals() {
+async function loadStatus() {
+  const data = await getJSON("/api/status");
+  document.getElementById("markets").textContent =
+    data.totalMarkets ?? data.markets ?? "--";
+  document.getElementById("status").textContent =
+    data.message || data.status || "Server connected";
+}
 
-  const body = document.getElementById("signals");
+async function loadPositions() {
+  const data = await getJSON("/api/positions");
+  const positions = Array.isArray(data) ? data :
+    (data.positions || data.activePositions || []);
 
-  document.getElementById("buyCount").textContent =
-    signalHistory.filter(s => s.side === "BUY").length;
+  document.getElementById("activeCount").textContent = positions.length;
 
-  document.getElementById("sellCount").textContent =
-    signalHistory.filter(s => s.side === "SELL").length;
-
-  if (!signalHistory.length) {
-    body.innerHTML =
-      '<tr><td colspan="8">No signals yet</td></tr>';
-    return;
-  }
-
-  body.innerHTML = signalHistory.map(s => `
+  const rows = positions.map(p => `
     <tr>
-      <td>${s.pair}</td>
-      <td class="${s.side === "BUY" ? "buy" : "sell"}">
-        ${s.side}
-      </td>
-      <td>${price(s.entry)}</td>
-      <td>${price(s.stopLoss)}</td>
-      <td>${price(s.target)}</td>
-      <td>${price(s.quantity)}</td>
-      <td>${price(s.riskAmount)}</td>
-      <td>${new Date(s.entryTime * 1000).toLocaleTimeString()}</td>
-    </tr>
-  `).join("");
+      <td>${safe(p.pair)}</td>
+      <td class="${sideClass(p.side)}">${safe(p.side)}</td>
+      <td>${fmt(p.entry)}</td>
+      <td>${fmt(p.stopLoss)}</td>
+      <td>${fmt(p.target)}</td>
+      <td>${fmt(p.quantity,4)}</td>
+      <td>${p.pnl == null ? "--" : money(p.pnl)}</td>
+      <td class="status">${safe(p.status || "OPEN")}</td>
+    </tr>`).join("");
+
+  document.getElementById("positionRows").innerHTML =
+    rows || '<tr><td colspan="8" class="muted">No active positions</td></tr>';
 }
 
-function renderPositions() {
+async function loadClosed() {
+  const data = await getJSON("/api/closed");
+  const trades = Array.isArray(data) ? data :
+    (data.closedPositions || data.trades || []);
 
-  const body = document.getElementById("positions");
+  document.getElementById("closedCount").textContent = trades.length;
 
-  if (!virtualPositions.length) {
-    body.innerHTML =
-      '<tr><td colspan="7">No virtual positions yet.</td></tr>';
-    return;
-  }
+  const total = trades.reduce((sum, t) => sum + Number(t.pnl || 0), 0);
+  const pnlEl = document.getElementById("realizedPnl");
+  pnlEl.textContent = money(total);
+  pnlEl.className = "stat " + (total >= 0 ? "good" : "sell");
 
-  body.innerHTML = virtualPositions.map(p => `
+  const rows = trades.slice().reverse().map(t => `
     <tr>
-      <td>${p.pair}</td>
-      <td class="${p.side === "BUY" ? "buy" : "sell"}">
-        ${p.side}
-      </td>
-      <td>${price(p.entry)}</td>
-      <td>${price(p.stopLoss)}</td>
-      <td>${price(p.target)}</td>
-      <td class="${p.pnl >= 0 ? "buy" : "sell"}">
-        ${price(p.pnl)}
-      </td>
-      <td>${p.status}</td>
-    </tr>
-  `).join("");
+      <td>${safe(t.pair)}</td>
+      <td class="${sideClass(t.side)}">${safe(t.side)}</td>
+      <td>${fmt(t.entry)}</td>
+      <td>${fmt(t.exitPrice ?? t.exit)}</td>
+      <td>${safe(t.result || t.reason || "--")}</td>
+      <td>${money(t.pnl)}</td>
+      <td>${safe(t.closedAt || t.exitTime || "--")}</td>
+    </tr>`).join("");
+
+  document.getElementById("closedRows").innerHTML =
+    rows || '<tr><td colspan="7" class="muted">No closed trades</td></tr>';
 }
 
-async function scanMarkets() {
+async function loadSignals() {
+  const data = await getJSON("/api/scan");
+  const signals = Array.isArray(data) ? data :
+    (data.signals || []);
 
+  document.getElementById("signals").textContent = signals.length;
+
+  const rows = signals.map(s => `
+    <tr>
+      <td>${safe(s.pair)}</td>
+      <td class="${sideClass(s.side)}">${safe(s.side)}</td>
+      <td>${fmt(s.entry)}</td>
+      <td>${fmt(s.stopLoss)}</td>
+      <td>${fmt(s.target)}</td>
+      <td>${fmt(s.quantity,4)}</td>
+      <td>${safe(s.entryTime || s.breakoutTime || "--")}</td>
+    </tr>`).join("");
+
+  document.getElementById("signalRows").innerHTML =
+    rows || '<tr><td colspan="7" class="muted">No new signals in this scan</td></tr>';
+}
+
+async function refreshDashboard() {
+  document.getElementById("error").textContent = "";
+  try {
+    await Promise.all([loadStatus(), loadPositions(), loadClosed()]);
+  } catch (err) {
+    document.getElementById("error").textContent = err.message;
+  }
+}
+
+async function runScan() {
   if (scanning) return;
-
   scanning = true;
-
   const btn = document.getElementById("scanBtn");
   btn.disabled = true;
   btn.textContent = "SCANNING...";
+  document.getElementById("error").textContent = "";
+  document.getElementById("status").textContent = "Scanning markets...";
 
   try {
-
-    const result = await api("/api/scan");
-
-    if (!result.success) {
-      throw new Error(result.error || "Scan failed");
-    }
-
-    document.getElementById("totalPairs").textContent =
-      result.totalPairs;
-
-    document.getElementById("scanned").textContent =
-      result.scanned;
-
-    (result.signals || []).forEach(addSignal);
-
-    document.getElementById("activity").textContent =
-      "Last scan: " + new Date().toLocaleTimeString();
-
-    document.getElementById("connection").textContent =
-      "CoinDCX connected · Scanner active";
-
-  } catch (error) {
-
-    document.getElementById("activity").textContent =
-      error.message;
-
+    await loadSignals();
+    await refreshDashboard();
+    document.getElementById("status").textContent =
+      "Scan completed · " + new Date().toLocaleTimeString();
+  } catch (err) {
+    document.getElementById("error").textContent = err.message;
+    document.getElementById("status").textContent = "Scan failed";
   } finally {
-
     scanning = false;
     btn.disabled = false;
-    btn.textContent = "SCAN AGAIN";
-
+    btn.textContent = "SCAN NOW";
   }
 }
 
-document.getElementById("scanBtn").addEventListener(
-  "click",
-  () => {
-    if (!scanning) scanMarkets();
+async function saveSettings() {
+  const balance = Number(document.getElementById("balance").value);
+  const riskPercent = Number(document.getElementById("risk").value);
+
+  if (!(balance > 0) || riskPercent < 0.1 || riskPercent > 1) {
+    document.getElementById("settingsMsg").textContent =
+      "Balance must be positive; risk must be between 0.1% and 1%.";
+    return;
   }
-);
 
+  try {
+    await getJSON("/api/settings", {
+      method:"POST",
+      body:JSON.stringify({balance, riskPercent})
+    });
+    document.getElementById("settingsMsg").textContent = "Settings saved.";
+  } catch (err) {
+    document.getElementById("settingsMsg").textContent = err.message;
+  }
+}
+
+async function loadSettings() {
+  try {
+    const data = await getJSON("/api/settings");
+    if (data.balance != null) document.getElementById("balance").value = data.balance;
+    if (data.riskPercent != null) document.getElementById("risk").value = data.riskPercent;
+  } catch (_) {}
+}
+
+async function init() {
+  await loadSettings();
+  await refreshDashboard();
+  // Initial scan is manual; background refresh only updates dashboard data.
+  setInterval(refreshDashboard, 30000);
+}
+init();
 </script>
-
 </body>
 </html>
