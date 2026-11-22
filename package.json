@@ -1,0 +1,14 @@
+
+{
+  "name": "ud-coindcx-1m-box-breakout",
+  "version": "1.0.0",
+  "description": "UD CoinDCX 1 Minute Box Breakout Scanner",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2"
+  }
+}
